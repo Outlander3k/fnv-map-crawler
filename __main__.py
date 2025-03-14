@@ -103,6 +103,8 @@ def windowLoop():
     global mousePos1
     global mousePos2
     global mousePos3
+    global bb1
+    global bb2
     if buttonPressed == 1:
         buttonX.config(text="Click to set position, space to confirm.")
         if mouse.is_pressed(button='left'):
@@ -133,7 +135,7 @@ def windowLoop():
     if buttonPressed == 4:
         buttonTopL.config(text="Click to set position, space to confirm.")
         if mouse.is_pressed(button='left'):
-            mousePos3 = mouse.get_position()
+            bb1 = mouse.get_position()
         if keyboard.is_pressed('space'):
             buttonPressed = 0
             text = str(mousePos3)
@@ -142,7 +144,7 @@ def windowLoop():
     if buttonPressed == 5:
         buttonBotR.config(text="Click to set position, space to confirm.")
         if mouse.is_pressed(button='left'):
-            mousePos3 = mouse.get_position()
+            bb2 = mouse.get_position()
         if keyboard.is_pressed('space'):
             buttonPressed = 0
             text = str(mousePos3)
@@ -332,4 +334,4 @@ def stitchColumns(stripsForFinal):
     for im in stripsForFinal:
         if os.path.exists(im):
             os.remove(im)
-#main()
+main()
