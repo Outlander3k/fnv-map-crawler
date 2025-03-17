@@ -15,8 +15,8 @@ stitcher = Stitcher()
 # Values
 xDef = 0
 yDef = 0
-xOffset = 23
-yOffset = 7
+xOffset = 0
+yOffset = 0
 continueToPartTwoG = False
 setupMousePosG = 1
 currentStripG = 0
@@ -26,6 +26,8 @@ mousePos3 = list()
 bb1 = list()
 bb2 = list()
 buttonPressed = 0
+coordsText = ""
+estimText = ""
 
 def windowLoop():
     global buttonPressed
@@ -35,6 +37,8 @@ def windowLoop():
     global mousePos3
     global bb1
     global bb2
+    global coordsText
+    global estimText
     if buttonPressed == 1:
         buttonX.config(text="Click to set position, space to confirm.")
         if mouse.is_pressed(button='left'):
@@ -80,7 +84,16 @@ def windowLoop():
             text = str(bb2)
             buttonBotR.config(text=text)
         time.sleep(0.01)
-
+    coordsText = "X" + str(xDef + xOffset) + " x Y" + str(yDef + yOffset)
+    estimText = str(((abs(xDef)*2)+1)*788) + "*" + str(((abs(yDef)*2)+1)*758)
+    textBoxCoords.config(state='normal')
+    textBoxCoords.delete('1.0',tk.END)
+    textBoxCoords.insert('1.0', coordsText)
+    textBoxCoords.config(state='disabled')
+    textboxEstim.config(state='normal')
+    textboxEstim.delete('1.0',tk.END)
+    textboxEstim.insert('1.0', estimText)
+    textboxEstim.config(state='disabled')
     window.after(1, windowLoop)
 
 def main():
@@ -110,7 +123,6 @@ def main():
     #bb1, bb2, mousePos1, mousePos2, mousePos3, step, setupMousePos = setup_positions(step, setupMousePos, mousePos1, mousePos2, mousePos3, bb1, bb2)
 
     while temp != (abs(xDef) * 2) + 1:
-    #while temp != (abs(xDef))  + 1:
         if not os.path.exists("C:/strips/" + str(currentStrip) + ".png"):
             time.sleep(1)
             y_loop(bb1, bb2, mousePos1, mousePos2, mousePos3, temp2, x, y, imagesForStrip)
@@ -121,26 +133,6 @@ def main():
             stripsForFinal.append("C:/strips/" + str(currentStrip) + ".png")
             print("Skipping strip " + str(currentStrip))
             currentStrip = currentStrip + 1
-    step = 0
-    #while continueToPartTwo == False:
-        #print("RESTART THE GECK")
-        #if step != 5:
-            #bb1, bb2, mousePos1, mousePos2, mousePos3, step, setupMousePos = setup_positions(step, setupMousePos)
-        #if keyboard.is_pressed('space'): #and step == 5:
-            #continueToPartTwo = True
-        #time.sleep(0.1)
-    #temp = 0
-    #while temp != (abs(xDef)):
-        #if not os.path.exists("C:/strips/" + str(currentStrip) + ".png"):
-            #time.sleep(1)
-            #y_loop(bb1, bb2, mousePos1, mousePos2, mousePos3, temp2, x, y, imagesForStrip)
-            #temp, temp2, x, y, currentStrip = create_strip(temp, x, imagesForStrip, stripsForFinal, currentStrip)
-        #else:
-            #temp = temp + 1
-            #x = x +1
-            #stripsForFinal.append("C:/strips/" + str(currentStrip) + ".png")
-            #print("Skipping strip " + str(currentStrip))
-            #currentStrip = currentStrip + 1
     stitchColumns(stripsForFinal)
 
 
@@ -265,6 +257,8 @@ window.title("Hello World")
 
 buttonInputX = tk.Button(text = "Press to set amount of cells on X")
 buttonInputY = tk.Button(text = "Press to set amount of cells on Y")
+buttonInputXo = tk.Button(text = "Press to set the X offset")
+buttonInputYo = tk.Button(text = "Press to set the Y offset")
 
 buttonX = tk.Button(text="Select X Position")
 def handle_button_press1(event):
@@ -312,6 +306,20 @@ def handle_text_Y(event):
     print(yDef)
     textBoxY.config(state='disabled')
     return
+textBoxXo = tk.Text(height = 1, width = 5)
+def handle_text_Xo(event):
+    global xOffset
+    xOffset = int(textBoxX.get("1.0",'end-1c'))
+    print(xOffset)
+    textBoxXo.config(state='disabled')
+    return
+textBoxYo = tk.Text(height = 1, width = 5)
+def handle_text_Yo(event):
+    global yOffset
+    yOffset = int(textBoxYo.get("1.0",'end-1c'))
+    print(yOffset)
+    textBoxYo.config(state='disabled')
+    return
 buttonEngage = tk.Button(text="Click to start when all values are filled!")
 def handle_go(event):
     window.destroy()
@@ -328,8 +336,24 @@ def char_countY(event):
     count = len(textBoxY.get('1.0', 'end-1c'))
     if count >= 4 and event.keysym not in {'BackSpace', 'Delete'}:
         return 'break'  # dispose of the event, prevent typing
+def char_countXo(event):
+    if event.keysym in {'Return'}:
+        return 'break'
+    count = len(textBoxXo.get('1.0', 'end-1c'))
+    if count >= 4 and event.keysym not in {'BackSpace', 'Delete'}:
+        return 'break'  # dispose of the event, prevent typing
+def char_countYo(event):
+    if event.keysym in {'Return'}:
+        return 'break'
+    count = len(textBoxYo.get('1.0', 'end-1c'))
+    if count >= 4 and event.keysym not in {'BackSpace', 'Delete'}:
+        return 'break'  # dispose of the event, prevent typing
+textBoxCoords = tk.Text(height = 1, width = 10)
+textboxEstim = tk.Text(height = 1, width = 20)
 buttonInputX.bind('<Button-1>', handle_text_X)
 buttonInputY.bind('<Button-1>', handle_text_Y)
+buttonInputXo.bind('<Button-1>', handle_text_Xo)
+buttonInputYo.bind('<Button-1>', handle_text_Yo)
 buttonX.bind('<Button-1>', handle_button_press1)
 buttonY.bind('<Button-1>', handle_button_press2)
 buttonGo.bind('<Button-1>', handle_button_press3)
@@ -340,16 +364,26 @@ textBoxX.bind('<KeyPress>', char_countX)
 textBoxX.bind('<KeyRelease>', char_countX)
 textBoxY.bind('<KeyPress>', char_countY)
 textBoxY.bind('<KeyRelease>', char_countY)
+textBoxXo.bind('<KeyPress>', char_countXo)
+textBoxXo.bind('<KeyRelease>', char_countXo)
+textBoxYo.bind('<KeyPress>', char_countYo)
+textBoxYo.bind('<KeyRelease>', char_countYo)
 textBoxX.pack()
 buttonInputX.pack()
 textBoxY.pack()
 buttonInputY.pack()
+textBoxXo.pack()
+buttonInputXo.pack()
+textBoxYo.pack()
+buttonInputYo.pack()
 buttonX.pack()
 buttonY.pack()
 buttonGo.pack()
 buttonTopL.pack()
 buttonBotR.pack()
 buttonEngage.pack()
+textBoxCoords.pack()
+textboxEstim.pack()
 
 # Start the event loop.
 window.after(1,windowLoop)
