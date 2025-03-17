@@ -13,8 +13,10 @@ from stitching import Stitcher
 stitcher = Stitcher()
 
 # Values
-xDef = -35
-yDef = 40
+xDef = 0
+yDef = 0
+xOffset = 23
+yOffset = 7
 continueToPartTwoG = False
 setupMousePosG = 1
 currentStripG = 0
@@ -24,78 +26,6 @@ mousePos3 = list()
 bb1 = list()
 bb2 = list()
 buttonPressed = 0
-
-window = tk.Tk()
-window.title("Hello World")
-
-buttonInputX = tk.Button(text = "Press to set amount of cells on X")
-buttonInputY = tk.Button(text = "Press to set amount of cells on Y")
-
-buttonX = tk.Button(text="Select X Position")
-def handle_button_press1(event):
-    print("Sending button press")
-    global buttonPressed
-    buttonPressed = 1
-    return
-buttonY = tk.Button(text="Select Y Position")
-def handle_button_press2(event):
-    print("Sending button press")
-    global buttonPressed
-    buttonPressed = 2
-    return
-buttonGo = tk.Button(text="Select Go Button Position")
-def handle_button_press3(event):
-    print("Sending button press")
-    global buttonPressed
-    buttonPressed = 3
-    return
-buttonTopL = tk.Button(text="Select Top Left Cell Position")
-def handle_button_press4(event):
-    print("Sending button press")
-    global buttonPressed
-    buttonPressed = 4
-    return
-buttonBotR = tk.Button(text="Select Bottom Right Cell Position")
-def handle_button_press5(event):
-    print("Sending button press")
-    global buttonPressed
-    buttonPressed = 5
-    return
-textBoxX = tk.Text(height = 1, width = 5)
-def handle_text_X(event):
-    global xDef
-    xDef = textBoxX.get("1.0",'end-1c')
-    xDef = int(xDef)
-    print(xDef)
-    return
-textBoxY = tk.Text(height = 1, width = 5)
-def handle_text_Y(event):
-    global yDef
-    yDef = textBoxY.get("1.0",'end-1c')
-    yDef = int(yDef)
-    print(yDef)
-    return
-buttonEngage = tk.Button(text="Click to start when all values are filled!")
-def handle_go(event):
-    window.destroy()
-buttonInputX.bind('<Button-1>', handle_text_X)
-buttonInputY.bind('<Button-1>', handle_text_Y)
-buttonX.bind('<Button-1>', handle_button_press1)
-buttonY.bind('<Button-1>', handle_button_press2)
-buttonGo.bind('<Button-1>', handle_button_press3)
-buttonTopL.bind('<Button-1>', handle_button_press4)
-buttonBotR.bind('<Button-1>', handle_button_press5)
-buttonEngage.bind('<Button-1>', handle_go)
-textBoxX.pack()
-buttonInputX.pack()
-textBoxY.pack()
-buttonInputY.pack()
-buttonX.pack()
-buttonY.pack()
-buttonGo.pack()
-buttonTopL.pack()
-buttonBotR.pack()
-buttonEngage.pack()
 
 def windowLoop():
     global buttonPressed
@@ -138,7 +68,7 @@ def windowLoop():
             bb1 = mouse.get_position()
         if keyboard.is_pressed('space'):
             buttonPressed = 0
-            text = str(mousePos3)
+            text = str(bb1)
             buttonTopL.config(text=text)
         time.sleep(0.01)
     if buttonPressed == 5:
@@ -147,15 +77,11 @@ def windowLoop():
             bb2 = mouse.get_position()
         if keyboard.is_pressed('space'):
             buttonPressed = 0
-            text = str(mousePos3)
+            text = str(bb2)
             buttonBotR.config(text=text)
         time.sleep(0.01)
 
     window.after(1, windowLoop)
-
-# Start the event loop.
-window.after(1,windowLoop)
-window.mainloop()
 
 def main():
     x = xDef
@@ -172,16 +98,19 @@ def main():
     global mousePos3
     global bb1
     global bb2
+    global xOffset
+    global yOffset
     currentStrip = currentStripG
     Path("C:/strips/").mkdir(parents=True, exist_ok=True)
     Path("C:/wcreenshots/").mkdir(parents=True, exist_ok=True)
+
 
     continueToPartTwo = continueToPartTwoG
     setupMousePos = setupMousePosG
     #bb1, bb2, mousePos1, mousePos2, mousePos3, step, setupMousePos = setup_positions(step, setupMousePos, mousePos1, mousePos2, mousePos3, bb1, bb2)
 
-    #while temp != (xDef * 2) + 1:
-    while temp != (abs(xDef))  + 1:
+    while temp != (abs(xDef) * 2) + 1:
+    #while temp != (abs(xDef))  + 1:
         if not os.path.exists("C:/strips/" + str(currentStrip) + ".png"):
             time.sleep(1)
             y_loop(bb1, bb2, mousePos1, mousePos2, mousePos3, temp2, x, y, imagesForStrip)
@@ -200,18 +129,18 @@ def main():
         #if keyboard.is_pressed('space'): #and step == 5:
             #continueToPartTwo = True
         #time.sleep(0.1)
-    temp = 0
-    while temp != (abs(xDef)):
-        if not os.path.exists("C:/strips/" + str(currentStrip) + ".png"):
-            time.sleep(1)
-            y_loop(bb1, bb2, mousePos1, mousePos2, mousePos3, temp2, x, y, imagesForStrip)
-            temp, temp2, x, y, currentStrip = create_strip(temp, x, imagesForStrip, stripsForFinal, currentStrip)
-        else:
-            temp = temp + 1
-            x = x +1
-            stripsForFinal.append("C:/strips/" + str(currentStrip) + ".png")
-            print("Skipping strip " + str(currentStrip))
-            currentStrip = currentStrip + 1
+    #temp = 0
+    #while temp != (abs(xDef)):
+        #if not os.path.exists("C:/strips/" + str(currentStrip) + ".png"):
+            #time.sleep(1)
+            #y_loop(bb1, bb2, mousePos1, mousePos2, mousePos3, temp2, x, y, imagesForStrip)
+            #temp, temp2, x, y, currentStrip = create_strip(temp, x, imagesForStrip, stripsForFinal, currentStrip)
+        #else:
+            #temp = temp + 1
+            #x = x +1
+            #stripsForFinal.append("C:/strips/" + str(currentStrip) + ".png")
+            #print("Skipping strip " + str(currentStrip))
+            #currentStrip = currentStrip + 1
     stitchColumns(stripsForFinal)
 
 
@@ -283,19 +212,15 @@ def y_loop(bb1, bb2, mousePos1, mousePos2, mousePos3, temp2, x, y, imagesForStri
 
         # Enter cell X
         mouse.click(button='left')
-        keyboard.send('backspace', do_press=True, do_release=True)
-        keyboard.send('backspace', do_press=True, do_release=True)
-        keyboard.send('backspace', do_press=True, do_release=True)
-        keyboard.write(str(x), delay=0, restore_state_after=True, exact=None)
+        keyboard.send('ctrl+a, backspace', do_press=True, do_release=True)
+        keyboard.write(str(x + xOffset), delay=0, restore_state_after=True, exact=None)
 
         mouse.move(mousePos2[0], mousePos2[1], True, 0)  # Move to first coordinate
 
         # Enter cell Y
         mouse.click(button='left')
-        keyboard.send('backspace', do_press=True, do_release=True)
-        keyboard.send('backspace', do_press=True, do_release=True)
-        keyboard.send('backspace', do_press=True, do_release=True)
-        keyboard.write(str(y), delay=0, restore_state_after=True, exact=None)
+        keyboard.send('ctrl+a, backspace', do_press=True, do_release=True)
+        keyboard.write(str(y + yOffset), delay=0, restore_state_after=True, exact=None)
 
         mouse.move(mousePos3[0], mousePos3[1], True, 0)  # Move to enter
         mouse.click(button='left')  # Click enter
@@ -334,4 +259,98 @@ def stitchColumns(stripsForFinal):
     for im in stripsForFinal:
         if os.path.exists(im):
             os.remove(im)
-main()
+
+window = tk.Tk()
+window.title("Hello World")
+
+buttonInputX = tk.Button(text = "Press to set amount of cells on X")
+buttonInputY = tk.Button(text = "Press to set amount of cells on Y")
+
+buttonX = tk.Button(text="Select X Position")
+def handle_button_press1(event):
+    print("Sending button press")
+    global buttonPressed
+    buttonPressed = 1
+    return
+buttonY = tk.Button(text="Select Y Position")
+def handle_button_press2(event):
+    print("Sending button press")
+    global buttonPressed
+    buttonPressed = 2
+    return
+buttonGo = tk.Button(text="Select Go Button Position")
+def handle_button_press3(event):
+    print("Sending button press")
+    global buttonPressed
+    buttonPressed = 3
+    return
+buttonTopL = tk.Button(text="Select Top Left Cell Position")
+def handle_button_press4(event):
+    print("Sending button press")
+    global buttonPressed
+    buttonPressed = 4
+    return
+buttonBotR = tk.Button(text="Select Bottom Right Cell Position")
+def handle_button_press5(event):
+    print("Sending button press")
+    global buttonPressed
+    buttonPressed = 5
+    return
+textBoxX = tk.Text(height = 1, width = 5)
+def handle_text_X(event):
+    global xDef
+    xDef = textBoxX.get("1.0",'end-1c')
+    xDef = int(xDef)
+    print(xDef)
+    textBoxX.config(state='disabled')
+    return
+textBoxY = tk.Text(height = 1, width = 5)
+def handle_text_Y(event):
+    global yDef
+    yDef = textBoxY.get("1.0",'end-1c')
+    yDef = int(yDef)
+    print(yDef)
+    textBoxY.config(state='disabled')
+    return
+buttonEngage = tk.Button(text="Click to start when all values are filled!")
+def handle_go(event):
+    window.destroy()
+    main()
+def char_countX(event):
+    if event.keysym in {'Return'}:
+        return 'break'
+    count = len(textBoxX.get('1.0', 'end-1c'))
+    if count >= 4 and event.keysym not in {'BackSpace', 'Delete'}:
+        return 'break'  # dispose of the event, prevent typing
+def char_countY(event):
+    if event.keysym in {'Return'}:
+        return 'break'
+    count = len(textBoxY.get('1.0', 'end-1c'))
+    if count >= 4 and event.keysym not in {'BackSpace', 'Delete'}:
+        return 'break'  # dispose of the event, prevent typing
+buttonInputX.bind('<Button-1>', handle_text_X)
+buttonInputY.bind('<Button-1>', handle_text_Y)
+buttonX.bind('<Button-1>', handle_button_press1)
+buttonY.bind('<Button-1>', handle_button_press2)
+buttonGo.bind('<Button-1>', handle_button_press3)
+buttonTopL.bind('<Button-1>', handle_button_press4)
+buttonBotR.bind('<Button-1>', handle_button_press5)
+buttonEngage.bind('<Button-1>', handle_go)
+textBoxX.bind('<KeyPress>', char_countX)
+textBoxX.bind('<KeyRelease>', char_countX)
+textBoxY.bind('<KeyPress>', char_countY)
+textBoxY.bind('<KeyRelease>', char_countY)
+textBoxX.pack()
+buttonInputX.pack()
+textBoxY.pack()
+buttonInputY.pack()
+buttonX.pack()
+buttonY.pack()
+buttonGo.pack()
+buttonTopL.pack()
+buttonBotR.pack()
+buttonEngage.pack()
+
+# Start the event loop.
+window.after(1,windowLoop)
+window.mainloop()
