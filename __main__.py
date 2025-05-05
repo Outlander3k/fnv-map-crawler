@@ -84,7 +84,7 @@ def windowLoop():
             text = str(bb2)
             buttonBotR.config(text=text)
         time.sleep(0.01)
-    coordsText = "X" + str(xDef + xOffset) + " x Y" + str(yDef + yOffset)
+    coordsText = "X" + str(xOffset + xDef) + " x Y" + str(yOffset + yDef)
     estimText = str(((abs(xDef)*2)+1)*788) + "*" + str(((abs(yDef)*2)+1)*758)
     textBoxCoords.config(state='normal')
     textBoxCoords.delete('1.0',tk.END)
@@ -205,18 +205,18 @@ def y_loop(bb1, bb2, mousePos1, mousePos2, mousePos3, temp2, x, y, imagesForStri
         # Enter cell X
         mouse.click(button='left')
         keyboard.send('ctrl+a, backspace', do_press=True, do_release=True)
-        keyboard.write(str(x + xOffset), delay=0, restore_state_after=True, exact=None)
+        keyboard.write(str(xOffset + x), delay=0, restore_state_after=True, exact=None)
 
         mouse.move(mousePos2[0], mousePos2[1], True, 0)  # Move to first coordinate
 
         # Enter cell Y
         mouse.click(button='left')
         keyboard.send('ctrl+a, backspace', do_press=True, do_release=True)
-        keyboard.write(str(y + yOffset), delay=0, restore_state_after=True, exact=None)
+        keyboard.write(str(yOffset + y), delay=0, restore_state_after=True, exact=None)
 
         mouse.move(mousePos3[0], mousePos3[1], True, 0)  # Move to enter
         mouse.click(button='left')  # Click enter
-        time.sleep(1)  # Wait for cell to load
+        time.sleep(4)  # Wait for cell to load
 
         # Screenshot
         screenshot = ImageGrab.grab((bb1[0], bb1[1], bb2[0], bb2[1]), False, False)  # Screenshot cell
@@ -309,8 +309,8 @@ def handle_text_Y(event):
 textBoxXo = tk.Text(height = 1, width = 5)
 def handle_text_Xo(event):
     global xOffset
-    xOffset = int(textBoxX.get("1.0",'end-1c'))
-    print(xOffset)
+    xOffset = int(textBoxXo.get("1.0",'end-1c'))
+    print("xOffset is "+ str(xOffset))
     textBoxXo.config(state='disabled')
     return
 textBoxYo = tk.Text(height = 1, width = 5)
